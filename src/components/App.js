@@ -6,13 +6,11 @@ import Main from "./Main";
 import PopupWithForm from "./PopupWithForm";
 
 function App() {
-  const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] =
-    React.useState("");
-  const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = React.useState(false);
-  const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] =
-    React.useState(false);
-  const [isViewPopupOpen, setIsViewPopupOpen] = React.useState(false);
-  const [selectedCard, setSelectedCard] = React.useState(false);
+  const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = React.useState("");
+  const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = React.useState("");
+  const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState("");
+  const [isViewPopupOpen, setIsViewPopupOpen] = React.useState("");
+  const [selectedCard, setSelectedCard] = React.useState({});
 
   const handleCardClick = (props) => {
     setSelectedCard(props);
@@ -25,9 +23,10 @@ function App() {
 
   const closeAllPopups = () => {
     setIsEditProfilePopupOpen("");
-    setIsAddPlacePopupOpen(false);
-    setIsEditAvatarPopupOpen(false);
-    setIsViewPopupOpen(false);
+    setIsAddPlacePopupOpen("");
+    setIsEditAvatarPopupOpen("");
+    setIsViewPopupOpen("");
+    setSelectedCard({});
   };
 
   const onKeyDown = (e) => {
