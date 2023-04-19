@@ -1,0 +1,39 @@
+.popup__button-save {
+  height: 50px;
+  background-color: #000;
+  color: #fff;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: calc(22/18);
+  border: none;
+  outline: none;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: var(--button-transition);
+}
+
+.popup__button-save:hover {
+  opacity: .8;
+}
+
+.popup__button-save:disabled {
+  background-color: transparent;
+  color: #000;
+  opacity: .2;
+  border: 1px solid black;
+  cursor: default;
+}
+
+.popup__button-save:disabled:hover {
+  opacity: .2;
+}
+
+
+
+@media screen and (max-width: 618px) {
+  .popup__button-save {
+    height: 46px;
+    font-size: 14px;
+    line-height: 17px;
+  }
+}
