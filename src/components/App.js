@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Footer from "./Footer";
 import Header from "./Header";
 import ImagePopup from "./ImagePopup";
@@ -6,11 +6,11 @@ import Main from "./Main";
 import PopupWithForm from "./PopupWithForm";
 
 function App() {
-  const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = React.useState("");
-  const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = React.useState("");
-  const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState("");
-  const [isViewPopupOpen, setIsViewPopupOpen] = React.useState("");
-  const [selectedCard, setSelectedCard] = React.useState({});
+  const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
+  const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
+  const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
+  const [isViewPopupOpen, setIsViewPopupOpen] = useState(false);
+  const [selectedCard, setSelectedCard] = useState({});
 
   const handleCardClick = (props) => {
     setSelectedCard(props);
@@ -22,22 +22,33 @@ function App() {
   const handleEditAvatarClick = () => setIsEditAvatarPopupOpen(true);
 
   const closeAllPopups = () => {
-    setIsEditProfilePopupOpen("");
-    setIsAddPlacePopupOpen("");
-    setIsEditAvatarPopupOpen("");
-    setIsViewPopupOpen("");
+    setIsEditProfilePopupOpen(false);
+    setIsAddPlacePopupOpen(false);
+    setIsEditAvatarPopupOpen(false);
+    setIsViewPopupOpen(false);
     setSelectedCard({});
   };
 
-  const onKeyDown = (e) => {
-    console.log(e.key);
-    if (e.key === "Escape") {
-      closeAllPopups();
-    }
-  };
+  //Закрытие по Eacape -->
+  const isOpenPopups = [
+    isEditProfilePopupOpen,
+    isAddPlacePopupOpen,
+    isEditAvatarPopupOpen,
+    isViewPopupOpen,
+  ];
+
+  useEffect(() => {
+    function onKeyDown(e) { if (e.key === "Escape") { closeAllPopups() }}
+
+    if ( isOpenPopups.some((popup) => { return popup === true })){ 
+      document.addEventListener("keydown", onKeyDown) }
+
+    return () => { document.removeEventListener("keydown", onKeyDown) };
+  }, [isOpenPopups]);
+  // <-- Закрытие по Eacape
 
   return (
-    <div className="page" onKeyDown={onKeyDown} tabIndex={0}>
+    <div className="page">
       <Header />
       <Main
         onEditProfile={handleEditProfileClick}
