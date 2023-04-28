@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import Footer from "./Footer";
 import Header from "./Header";
 import ImagePopup from "./ImagePopup";
@@ -9,12 +9,10 @@ function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
-  const [isViewPopupOpen, setIsViewPopupOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState({});
 
   const handleCardClick = (props) => {
     setSelectedCard(props);
-    setIsViewPopupOpen(true);
   };
 
   const handleEditProfileClick = () => setIsEditProfilePopupOpen(true);
@@ -25,22 +23,22 @@ function App() {
     setIsEditProfilePopupOpen(false);
     setIsAddPlacePopupOpen(false);
     setIsEditAvatarPopupOpen(false);
-    setIsViewPopupOpen(false);
     setSelectedCard({});
   };
 
-  //Закрытие по Eacape -->
+  //Закрытие по Escape -->
   const isOpenPopups = [
     isEditProfilePopupOpen,
     isAddPlacePopupOpen,
     isEditAvatarPopupOpen,
-    isViewPopupOpen,
+    selectedCard
   ];
 
   useEffect(() => {
     function onKeyDown(e) { if (e.key === "Escape") { closeAllPopups() }}
 
-    if ( isOpenPopups.some((popup) => { return popup === true })){ 
+    if (isOpenPopups.some((popup) => { return popup === true }) ||
+      Object.keys(selectedCard).length !== 0 ){ 
       document.addEventListener("keydown", onKeyDown) }
 
     return () => { document.removeEventListener("keydown", onKeyDown) };
@@ -136,7 +134,6 @@ function App() {
       </PopupWithForm>
 
       <ImagePopup
-        isOpen={isViewPopupOpen && "popup_active"}
         name="view"
         card={selectedCard}
         onClose={closeAllPopups}

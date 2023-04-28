@@ -1,9 +1,11 @@
 import React from "react";
 
 function ImagePopup(props) {
+  
   return (
     <div
-      className={`popup popup_type_${props.name} ${props.isOpen}`}
+      className={`popup popup_type_${props.name} 
+        ${Object.keys(props.card).length !== 0 && 'popup_active'}`}
       onClick={props.onClose}
     >
       <div
