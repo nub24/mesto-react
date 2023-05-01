@@ -62,7 +62,7 @@ class Api {
   }
 
   //установка/снятие лайка
-  toggleLike({ cardId, isLiked }) {
+  toggleLike(cardId, isLiked) {
     return isLiked ? this._delLike(cardId) : this._putLike(cardId);
   }
 
