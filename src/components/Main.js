@@ -1,31 +1,9 @@
-import React, { useState, useEffect, useContext } from "react";
-import { api } from "../utils/Api";
+import React, { useContext } from "react";
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import Card from "./Card";
 
 function Main(props) {
   const currentUser = useContext(CurrentUserContext)
-  const [cards, setCards] = useState([]);
-
-  function handleCardLike (card) {
-    const isLiked = card.likes.some(i => i._id === currentUser._id);
-
-    api.toggleLike(card._id, isLiked).then((newCard) => {
-      setCards((state) => state.map((c) => c._id === card._id ? newCard : c))
-    })
-  }
-
-  function setCardsData() {
-    api.getCards()
-      .then((cardsData) => {
-        setCards(cardsData);
-      })
-      .catch((err) => console.log(`Ошибка получения карточек: ${err}`));
-  }
-
-  useEffect(() => {
-    setCardsData();
-  }, []);
 
   return (
     <main className="content">
@@ -58,12 +36,14 @@ function Main(props) {
       </section>
 
       <section className="cards">
-        {cards.map((card) => (
+        {props.cards.map((card) => (
           <Card 
             key={card._id} 
             card={card} 
             onCardClick={props.onCardClick} 
-            onCardLike={handleCardLike}/>
+            onCardLike={props.onCardLike}
+            onCardDelete={props.onCardDelete}
+          />
         ))}
       </section>
     </main>

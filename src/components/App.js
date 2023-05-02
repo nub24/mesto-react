@@ -11,12 +11,32 @@ function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
+  const [isConfirmPopupOpen, setIsConfirmPopupOpen] = useState(false);
+  const [cardToDelete, setCardToDelete] = useState({});
   const [selectedCard, setSelectedCard] = useState({});
   const [currentUser, setCurrentUser] = useState({})
+  const [cards, setCards] = useState([]);
 
   const handleCardClick = (props) => {
     setSelectedCard(props);
   };
+
+  function handleCardLike (card) {
+    const isLiked = card.likes.some(i => i._id === currentUser._id);
+
+    api.toggleLike(card._id, isLiked).then((newCard) => {
+      setCards((state) => state.map((c) => c._id === card._id ? newCard : c))
+    })
+  }
+
+  function handleCardDelete (evt) {
+    evt.preventDefault();
+    api.delCard(cardToDelete._id)
+      .then(() => {
+      setCards(() => cards.filter((item) => item !== cardToDelete));
+      closeAllPopups();
+    }).catch(err => console.log(`Ошибка удаления: ${err}`));
+  }
 
   const handleEditProfileClick = () => setIsEditProfilePopupOpen(true);
   const handleAddPlaceClick = () => setIsAddPlacePopupOpen(true);
@@ -27,6 +47,8 @@ function App() {
     setIsAddPlacePopupOpen(false);
     setIsEditAvatarPopupOpen(false);
     setSelectedCard({});
+    setIsConfirmPopupOpen(false);
+    setCardToDelete({});
   };
 
   //Закрытие по Escape -->
@@ -37,12 +59,25 @@ function App() {
     selectedCard
   ];
 
-  // get user data
-  useEffect(() => {
+  function getUserData () {
     api
       .getUserInfo()
       .then(userData => setCurrentUser(userData))
       .catch(err => `Ошибка получения данных пользователя: ${err}`);
+  }
+
+  function setCardsData() {
+    api.getCards()
+      .then((cardsData) => {
+        setCards(cardsData);
+      })
+      .catch((err) => console.log(`Ошибка получения карточек: ${err}`));
+  }
+
+  // get user data & cards
+  useEffect(() => {
+    getUserData();
+    setCardsData();
   }, [])
 
   useEffect(() => {
@@ -55,6 +90,11 @@ function App() {
     return () => { document.removeEventListener("keydown", onKeyDown) };
   }, [isOpenPopups]);
 
+  function confirmDeleteRequest(card) {
+    setCardToDelete(card);
+    setIsConfirmPopupOpen(true);
+  }
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
@@ -64,6 +104,9 @@ function App() {
           onAddPlace={handleAddPlaceClick}
           onEditAvatar={handleEditAvatarClick}
           onCardClick={handleCardClick}
+          onCardLike={handleCardLike}
+          onCardDelete={confirmDeleteRequest}
+          cards={cards}
         />
 
         <PopupWithForm
@@ -124,7 +167,13 @@ function App() {
           </div>
         </PopupWithForm>
 
-        <PopupWithForm name="delete" title="Вы уверены?" />
+        <PopupWithForm 
+          name="delete" 
+          title="Вы уверены?"
+          onClose={closeAllPopups}
+          isOpen={isConfirmPopupOpen && 'popup_active'}
+          onSubmit={handleCardDelete}
+          />
 
         <PopupWithForm
           name="avatar"
