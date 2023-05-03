@@ -1,28 +1,24 @@
-import React from "react";
+import usePopupClose from '../hooks/usePopupClose';
 
-function ImagePopup(props) {
-  
+function ImagePopup({ name, card, onClose }) {
+  usePopupClose(card, onClose);
+
   return (
     <div
-      className={`popup popup_type_${props.name} 
-        ${Object.keys(props.card).length !== 0 && 'popup_active'}`}
-      onClick={props.onClose}
-    >
-      <div
-        className="popup__container-view"
-        onClick={(e) => e.stopPropagation()}
-      >
+      className={`popup popup_type_${name} 
+        ${Object.keys(card).length !== 0 && 'popup_active'}`} >
+      <div className="popup__container-view" >
         <button
           type="button"
           className="popup__button-close"
-          onClick={props.onClose}
+          onClick={onClose}
         ></button>
         <img
           className="popup__photo"
-          src={props.card.link}
-          alt={props.card.name}
+          src={card.link}
+          alt={card.name}
         />
-        <p className="popup__caption">{props.card.name}</p>
+        <p className="popup__caption">{card.name}</p>
       </div>
     </div>
   );

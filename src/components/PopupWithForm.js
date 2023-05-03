@@ -1,31 +1,27 @@
 //props.name (edit, add, delete, avatar)
+import usePopupClose from '../hooks/usePopupClose';
 
-function PopupWithForm(props) {
+function PopupWithForm({ name, title, buttonText, isOpen, onClose, onSubmit, children }) {
+  usePopupClose(isOpen, onClose);
+
   return (
-    <div
-      className={`popup popup_type_${props.name} ${props.isOpen}`}
-      onClick={props.onClose}
-    >
-      <div className="popup__container" onClick={(e) => e.stopPropagation()}>
+    <div className={`popup popup_type_${name} ${isOpen}`}>
+      <div className="popup__container" >
         <button
           type="button"
           className="popup__button-close"
-          onClick={props.onClose}
-        ></button>
-        <h2 className="popup__title">{props.title}</h2>
+          onClick={onClose}
+        />
+        <h2 className="popup__title">{title}</h2>
         <form
           action="#"
-          className={`popup__form popup__form-${props.name}`}
-          name={`form-${props.name}`}
-          noValidate
-          onSubmit={props.onSubmit}
+          className={`popup__form popup__form-${name}`}
+          name={`form-${name}`}
+          onSubmit={onSubmit}
         >
-          {props.children}
+          {children}
           <button type="submit" className="popup__button-save">
-            {((props.name === "edit" || props.name === "avatar") &&
-              "Сохранить") ||
-              (props.name === "add" && "Создать") ||
-              (props.name === "delete" && "Да")}
+            {buttonText}
           </button>
         </form>
       </div>
