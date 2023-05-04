@@ -1,12 +1,12 @@
 import usePopupClose from '../hooks/usePopupClose';
 
 function ImagePopup({ name, card, onClose }) {
-  usePopupClose(card, onClose);
+  const isOpen = Object.keys(card).length
+  usePopupClose(isOpen, onClose);
 
   return (
     <div
-      className={`popup popup_type_${name} 
-        ${Object.keys(card).length !== 0 && 'popup_active'}`} >
+      className={`popup popup_type_${name} ${isOpen && 'popup_active'}`}>
       <div className="popup__container-view" >
         <button
           type="button"
