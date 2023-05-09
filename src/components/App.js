@@ -59,20 +59,15 @@ function App() {
     setCardToDelete({});
   };
 
-  function getUserData () {
-    api
-      .getUserInfo()
-      .then(userData => setCurrentUser(userData))
-      .catch(err => `Ошибка получения данных пользователя: ${err}`);
-  }
-
-  function setCardsData() {
-    api.getCards()
-      .then((cardsData) => {
-        setCards(cardsData);
-      })
-      .catch((err) => console.log(`Ошибка получения карточек: ${err}`));
-  }
+    // get user data & cards
+    useEffect(() => {
+      Promise.all([api.getUserInfo(), api.getCards()])
+        .then(([userData, cardsData]) => {
+          setCurrentUser(userData);
+          setCards(cardsData);
+        })
+        .catch((err) => console.log(`Ошибка получения данных: ${err}`));
+    }, [])
 
   function handleUpdateUser({name, about}) {
     setIsLoading(true);
@@ -108,12 +103,6 @@ function App() {
       .catch(err => console.log(`Ошибка обновления данных профиля: ${err}`))
       .finally(() => setIsLoading(false))
   }
-
-  // get user data & cards
-  useEffect(() => {
-    getUserData();
-    setCardsData();
-  }, [])
 
   function confirmDeleteRequest(card) {
     setCardToDelete(card);
