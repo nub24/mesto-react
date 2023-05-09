@@ -70,7 +70,7 @@ class Api {
     return isLiked ? this._delLike(cardId) : this._putLike(cardId);
   }
 
-  //удоление карточки
+  //удаление карточки
   delCard(id) {
     return this._request(`cards/${id}`, {
       method: "DELETE",
